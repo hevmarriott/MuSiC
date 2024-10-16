@@ -496,7 +496,8 @@ music2_prop_t_statistics = function(bulk.control.mtx, bulk.case.mtx, sc.sce, clu
 #' @import TOAST
 
 music2_prop_toast = function(bulk.control.mtx, bulk.case.mtx, sc.sce, clusters, samples, select.ct, expr_low=20, prop_r=0.1, 
-                        eps_c=0.05, eps_r=0.01, cutoff_c=10^(-3), cutoff_r=10^(-3), cap=0.3, maxiter = 200){
+                        eps_c=0.05, eps_r=0.01, cutoff_c=10^(-3), cutoff_r=10^(-3), cap=0.3, maxiter = 200, markers = NULL, 
+                        ct.cov = FALSE, cell_size = NULL, centered = FALSE, normalize = FALSE){
   gene.bulk = intersect(rownames(bulk.control.mtx), rownames(bulk.case.mtx))
   if(length(gene.bulk) < 0.1*min(nrow(bulk.control.mtx), nrow(bulk.case.mtx))){
     stop('Not enough genes for bulk data! Please check gene annotations.')
@@ -551,7 +552,7 @@ music2_prop_toast = function(bulk.control.mtx, bulk.case.mtx, sc.sce, clusters, 
     Design_out <- makeDesign(design, Prop)
     fitted_model <- fitModel(Design_out, Y_raw)
     # run TOAST to detect DE between conditions
-    res_table<- csTest(fitted_model, coef = "group", verbose = F)
+    res_table<- csTest(fitted_model, coef = "condition", verbose = F)
     
     # average cell type proportion
     mex = apply(prop_all, 2, mean)
